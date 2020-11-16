@@ -77,4 +77,17 @@ public class PaisResource {
 		return paisSalvo;
 	}
 	
+	@GetMapping("/excluir")
+	public void removaPais(int id, String token) {
+		List<Token> lista = tokenRepository.findAll(TokenSpec.porToken(token));
+		Token tokenClass = null;
+		
+		if(lista.size() == 1) {
+			tokenClass = lista.get(0);
+		}
+		if(tokenClass != null && (tokenClass.getExpiracao().toInstant().getNano() - ZonedDateTime.now().toInstant().getNano() > 0)) {
+			paisRepository.deleteById(id);	
+		}
+	}
+	
 }
